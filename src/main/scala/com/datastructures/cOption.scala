@@ -16,6 +16,18 @@ sealed trait cOption[+A] {
     case `cNone` => other
     case cSome(a) => a
   }
+
+  def orElse[B >: A](ob: cOption[B]): cOption[B] = this match {
+    case `cNone` => ob
+    case cSome(a) => cSome(a)
+  }
+
+  def filter(f: A => Boolean): cOption[A] = this match {
+    case `cNone` => cNone
+    case cSome(a) =>
+      if (f(a)) cSome(a)
+      else cNone
+  }
 }
 
 case class cSome[A](value: A) extends cOption[A]
