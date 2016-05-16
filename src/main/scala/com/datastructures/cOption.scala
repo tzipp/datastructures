@@ -23,11 +23,8 @@ sealed trait cOption[+A] {
   }
 
   def filter(f: A => Boolean): cOption[A] = this match {
-    case `cNone` => cNone
-    case cSome(a) =>
-      if (f(a)) cSome(a)
-      else cNone
-  }
+    case cSome(a) if f(a) => cSome(a)
+    case _ => cNone
 }
 
 case class cSome[A](value: A) extends cOption[A]
